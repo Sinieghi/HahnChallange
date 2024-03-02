@@ -1,10 +1,25 @@
+import { baseUrl } from "./utils/baseUrl";
+import { opt } from "./utils/fetchOpt";
+
 export class User {
   static async login(data) {
-    const res = await fetch("User/Login", {
+    console.log(data);
+    const res = await fetch(baseUrl + "User/Login", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     const user = await res.json();
+    window.localStorage.setItem("Bearer", user.token);
+    window.localStorage.setItem("userName", user.userName);
     return user;
+  }
+  static async getUserCoins() {
+    const res = await fetch(baseUrl + "User/CoinAmount", {
+      method: "GET",
+      ...opt,
+    });
+    const coin = await res.json();
+    return coin;
   }
 }

@@ -1,18 +1,46 @@
-export class Orders {
-  static Create(data) {
+import { baseUrl } from "./utils/baseUrl";
+import { opt } from "./utils/fetchOpt";
+
+export class OrdersCrud {
+  static async Create() {
     try {
-      fetch("Order/Create", {
+      fetch(baseUrl + "Order/Create", {
         method: "POST",
-        body: JSON.stringify(data),
+        ...opt,
       });
-      return data;
     } catch (error) {
       console.log(error);
     }
   }
-  static async GetOrders() {
+  static async Accept(id) {
     try {
-      const res = await fetch("", { method: "GET" });
+      fetch(baseUrl + "Order/Accept" + `?orderId=${id}`, {
+        method: "POST",
+        ...opt,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  static async GetAvailableOrders() {
+    try {
+      const res = await fetch(baseUrl + "Order/GetAllAvailable", {
+        method: "GET",
+        ...opt,
+      });
+      const orders = res.json();
+      return orders;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  static async GetAcceptedOrders() {
+    try {
+      const res = await fetch(baseUrl + "Order/GetAllAccepted", {
+        method: "GET",
+        ...opt,
+      });
       const orders = res.json();
       return orders;
     } catch (error) {

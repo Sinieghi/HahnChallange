@@ -3,21 +3,29 @@ import { User } from "../services/login";
 import LoginInputs from "../HTML/LoginInputs";
 
 class Login extends Component {
-  constructor() {
-    super();
+  constructor(prop) {
+    super(prop);
     this.state = {
-      user: { password: "", name: "", coinAmount: 1000 },
+      password: "",
+      userName: "",
+      coinAmount: 1000,
     };
   }
   componentDidMount() {}
   handleChange(e) {
-    this.setState({ ...this.state, user: { [e.target.name]: e.target.value } });
+    this.setState({ ...this.state, [e.target.name]: e.target.value });
   }
-  handleSubmit() {
-    User.login(this.state.user);
+  handleSubmit(e) {
+    e.preventDefault();
+    User.login(this.state);
   }
   render() {
-    return <LoginInputs />;
+    return (
+      <LoginInputs
+        handleChange={(e) => this.handleChange(e)}
+        handleSubmit={(e) => this.handleSubmit(e)}
+      />
+    );
   }
 }
 

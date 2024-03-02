@@ -1,4 +1,4 @@
-const NavMenu = () => {
+const NavMenu = ({ userName, coins }) => {
   return (
     <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
       <div className="container-fluid">
@@ -67,16 +67,14 @@ const NavMenu = () => {
               </div>
             </li>
           </ul>
-          <form className="d-flex">
-            <input
-              className="form-control me-sm-2"
-              type="search"
-              placeholder="Search"
-            />
-            <button className="btn btn-secondary my-2 my-sm-0" type="submit">
-              Search
-            </button>
-          </form>
+          <div className="d-flex" style={{ columnGap: "9px", color: "white" }}>
+            <p>
+              User: <span>{userName}</span>
+            </p>
+            <p>
+              Coins: <span style={{ color: "gold" }}>{coins}</span>
+            </p>
+          </div>
         </div>
       </div>
     </nav>
