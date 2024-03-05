@@ -6,14 +6,14 @@ import Orders from "./Pages/ordes";
 import CreateOrder from "./pages/CreateOder";
 import { pathname } from "./utils/pathName";
 import { User } from "./services/login";
-import Home from "./pages/Home";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      user: { userName: "", coins: 0 },
+      user: { userName: "", coins: 0, isLogin: "" },
       loading: true,
+      start: false,
     };
   }
   componentDidMount() {
@@ -23,6 +23,7 @@ class App extends Component {
           ...this.state,
           user: { userName: window.localStorage.getItem("userName"), coins },
           token: window.localStorage.getItem("Bearer"),
+          isLogin: window.localStorage.getItem("status"),
           loading: false,
         });
       })
@@ -40,12 +41,11 @@ class App extends Component {
           <NavMenu
             coins={this.state.user.coins}
             userName={this.state.user.userName}
+            uStatus={this.state.isLogin}
           />
-          {pathname() == "/" && <Home />}
           {pathname() == "/orders" && <Orders />}
           {pathname() == "/orders/create" && <CreateOrder />}
-          {pathname() == "/login" && <Login />}
-          {pathname() == "/cargo" && <Orders />}
+          {pathname() == "/" && this.state.isLogin !== "login" && <Login />}
         </>
       )
     );

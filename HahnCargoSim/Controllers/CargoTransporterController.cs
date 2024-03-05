@@ -25,7 +25,7 @@ namespace HahnCargoSim.Controllers
     public int Buy(int positionNodeId)
     {
       var username = User.FindFirst(ClaimTypes.Name)?.Value ?? "";
-      
+
       return transporterService.Buy(username, positionNodeId);
     }
 
@@ -42,27 +42,25 @@ namespace HahnCargoSim.Controllers
     {
       var username = User.FindFirst(ClaimTypes.Name)?.Value ?? "";
       var transporter = transporterService.Get(transporterId, username);
-
       if (transporter == null)
       {
         return BadRequest("Invalid transporter");
       }
-
       var orderValid = await Task.Run(() => this.simService.QueueMoveOrder(new MoveOrder
-        {
-          CargoTransporterId = transporter.Id,
-          Owner = username,
-          TargetNodeId = targetNodeId,
-        }
+      {
+        CargoTransporterId = transporter.Id,
+        Owner = username,
+        TargetNodeId = targetNodeId,
+      }
       ));
 
       if (orderValid)
       {
         return Ok();
-      } 
-      
+      }
+
       return BadRequest("Invalid move order");
-      
+
     }
   }
 }

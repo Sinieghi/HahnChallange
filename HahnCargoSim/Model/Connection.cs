@@ -12,6 +12,5 @@ namespace HahnCargoSim.Model
     public int EdgeId { get; set; }
     public int FirstNodeId { get; set; }
     public int SecondNodeId { get; set; }
-
   }
 }

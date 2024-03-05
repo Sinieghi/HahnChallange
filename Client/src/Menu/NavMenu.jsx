@@ -1,9 +1,12 @@
-const NavMenu = ({ userName, coins }) => {
+import { User } from "../services/login";
+import { pathname } from "../utils/pathName";
+
+const NavMenu = ({ userName, coins, uStatus }) => {
   return (
     <nav className="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
-          Navbar
+          Hahn Cargo Simulator
         </a>
         <button
           className="navbar-toggler"
@@ -18,60 +21,39 @@ const NavMenu = ({ userName, coins }) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarColor01">
           <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <a className="nav-link active" href="#">
-                Home
-                <span className="visually-hidden">(current)</span>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Features
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Pricing
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                About
-              </a>
-            </li>
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
-                href="#"
-                role="button"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                Dropdown
-              </a>
-              <div className="dropdown-menu">
-                <a className="dropdown-item" href="#">
-                  Action
+            {uStatus !== "login" && (
+              <li className="nav-item">
+                <a
+                  className={pathname() == "/" ? "nav-link active" : "nav-link"}
+                  href="/"
+                >
+                  Login
+                  <span className="visually-hidden">(current)</span>
                 </a>
-                <a className="dropdown-item" href="#">
-                  Another action
+              </li>
+            )}
+            {uStatus === "login" && (
+              <li className="nav-item">
+                <a
+                  className={
+                    pathname() == "/orders" ? "nav-link active" : "nav-link"
+                  }
+                  href="/orders"
+                >
+                  Orders
+                  <span className="visually-hidden">(current)</span>
                 </a>
-                <a className="dropdown-item" href="#">
-                  Something else here
-                </a>
-                <div className="dropdown-divider"></div>
-                <a className="dropdown-item" href="#">
-                  Separated link
-                </a>
-              </div>
-            </li>
+              </li>
+            )}
           </ul>
           <div className="d-flex" style={{ columnGap: "9px", color: "white" }}>
-            <p>
+            <button className="btn btn-primary btn-sm" onClick={User.logout}>
+              Logout
+            </button>
+            <p className="mb-0">
               User: <span>{userName}</span>
             </p>
-            <p>
+            <p className="mb-0">
               Coins: <span style={{ color: "gold" }}>{coins}</span>
             </p>
           </div>

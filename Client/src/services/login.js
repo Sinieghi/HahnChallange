@@ -12,6 +12,7 @@ export class User {
     const user = await res.json();
     window.localStorage.setItem("Bearer", user.token);
     window.localStorage.setItem("userName", user.userName);
+    window.localStorage.setItem("status", "login");
     return user;
   }
   static async getUserCoins() {
@@ -21,5 +22,10 @@ export class User {
     });
     const coin = await res.json();
     return coin;
+  }
+  static logout() {
+    window.localStorage.removeItem("Bearer");
+    window.localStorage.removeItem("userName");
+    window.localStorage.removeItem("status");
   }
 }

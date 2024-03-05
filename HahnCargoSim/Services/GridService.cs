@@ -33,6 +33,15 @@ namespace HahnCargoSim.Services
 
     public int? ConnectionAvailable(int sourceNodeId, int targetNodeId)
     {
+      System.Console.WriteLine(sourceNodeId);
+      System.Console.WriteLine(targetNodeId);
+      System.Console.WriteLine("'First'");
+      var h = grid?.Connections?.Where((c) => c!.FirstNodeId == sourceNodeId).Select(c => c.SecondNodeId).FirstOrDefault(-1);
+      var u = grid?.Connections?.Where((c) => c!.FirstNodeId == sourceNodeId).Select(c => c.Id).FirstOrDefault(-1);
+      System.Console.WriteLine(h);
+      System.Console.WriteLine(u);
+      //You find the truck current position then check if can move to the target 
+      // so i think the idea is to store the next position on storage? Will see
       return (from connection in grid.Connections where (connection!.FirstNodeId == sourceNodeId && connection.SecondNodeId == targetNodeId) || (connection.FirstNodeId == targetNodeId && connection.SecondNodeId == sourceNodeId) select connection.Id).FirstOrDefault(-1);
     }
 
@@ -55,7 +64,7 @@ namespace HahnCargoSim.Services
       {
         edge = GetEdge(con.EdgeId);
       }
-      return edge?.Time ?? new TimeSpan(0,0,0,0);
+      return edge?.Time ?? new TimeSpan(0, 0, 0, 0);
     }
 
     public Node GetRandomNode(List<int>? excludedNodes = null)
@@ -100,7 +109,7 @@ namespace HahnCargoSim.Services
     public int GetGridSizeFactor()
     {
       var factor = 1;
-      if(grid?.Nodes != null && grid.Nodes.Count > 10)
+      if (grid?.Nodes != null && grid.Nodes.Count > 10)
       {
         factor = grid.Nodes.Count / 10;
       }

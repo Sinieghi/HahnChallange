@@ -10,14 +10,12 @@ class Orders extends Component {
       loading: true,
       loadingAccepted: true,
       acceptedOrders: [],
+      patchLoading: false,
     };
   }
   componentDidMount() {
     this.requestOrders();
   }
-
-  handleChange() {}
-  handleSubmit() {}
 
   createOrder() {
     OrdersCrud.Create().then(() => {
@@ -25,7 +23,16 @@ class Orders extends Component {
     });
   }
 
-  requestOrders() {
+  acceptHandler(id) {
+    this.setState({ ...this.state, patchLoading: true });
+    OrdersCrud.Accept(id).then(() => {
+      this.requestOrders().then(() =>
+        this.setState({ ...this.state, patchLoading: false })
+      );
+    });
+  }
+
+  async requestOrders() {
     OrdersCrud.GetAvailableOrders()
       .then((orders) =>
         this.setState({ ...this.state, orders, loading: false })
@@ -54,6 +61,8 @@ class Orders extends Component {
           acceptedOrders={this.state.acceptedOrders}
           renderAccepted={this.renderAccepted.bind(this)}
           createOrder={this.createOrder.bind(this)}
+          acceptOrder={this.acceptHandler.bind(this)}
+          disableBtn={this.state.patchLoading}
         />
       )
     );

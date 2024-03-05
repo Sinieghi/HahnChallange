@@ -11,7 +11,6 @@ class Login extends Component {
       coinAmount: 1000,
     };
   }
-  componentDidMount() {}
   handleChange(e) {
     this.setState({ ...this.state, [e.target.name]: e.target.value });
   }

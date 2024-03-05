@@ -1,14 +1,43 @@
 import { useState } from "react";
+import { sim } from "../services/Simulator";
 
 const OrderTable = ({
   orders,
   acceptedOrders,
   renderAccepted,
   createOrder,
+  acceptOrder,
+  disableBtn,
 }) => {
   const [show, setShow] = useState(false);
   return (
     <>
+      <button
+        style={{
+          position: "fixed",
+          left: "10px",
+          top: "100px",
+          zIndex: "1000",
+        }}
+        onClick={() => {
+          sim.start();
+        }}
+      >
+        Start simulator
+      </button>
+      <button
+        style={{
+          position: "fixed",
+          left: "10px",
+          top: "150px",
+          zIndex: "1000",
+        }}
+        onClick={() => {
+          sim.stop();
+        }}
+      >
+        Stop simulator
+      </button>
       <table className="table table-hover">
         <thead>
           <tr style={{ position: "relative" }}>
@@ -31,19 +60,34 @@ const OrderTable = ({
             </th>
           </tr>
         </thead>
-        {orders.map((order, i) => {
-          return (
-            <tbody key={i}>
-              <tr className="table-active">
-                <th scope="row">Active</th>
-                <td>{order.load}</td>
-                <td>{order.value}</td>
-                <td>{order.deliveryDateUtc}</td>
-                <td>{order.expirationDateUtc}</td>
-              </tr>
-            </tbody>
-          );
-        })}
+        {orders &&
+          orders.map((order, i) => {
+            return (
+              <tbody key={i}>
+                <tr className="table-active">
+                  <th scope="row">Active</th>
+                  <td>{order.load}</td>
+                  <td>{order.value} C$</td>
+                  <td>{order.deliveryDateUtc}</td>
+                  <td>{order.expirationDateUtc}</td>
+                  <td
+                    style={{
+                      cursor: "pointer",
+                      position: "absolute",
+                      right: "20px",
+                      backgroundColor: "lightgreen",
+                    }}
+                    onClick={() => {
+                      if (disableBtn) return;
+                      acceptOrder(order.id);
+                    }}
+                  >
+                    Accept
+                  </td>
+                </tr>
+              </tbody>
+            );
+          })}
       </table>
 
       {acceptedOrders.length > 0 && (
@@ -65,7 +109,7 @@ const OrderTable = ({
                   <tr className="table-success">
                     <th scope="row">Accepted</th>
                     <td>{order.load}</td>
-                    <td>{order.value}</td>
+                    <td>{order.value} C$</td>
                     <td>{order.deliveryDateUtc}</td>
                     <td>{order.expirationDateUtc}</td>
                   </tr>

@@ -20,11 +20,11 @@ namespace HahnCargoSim.Services
     private int maxMoveOrderId;
 
 
-    public SimService (IOptions<SimConfig> config, 
-      IGridService gridService, 
-      IOrderService orderService, 
-      ICargoTransporterService transporterService, 
-      IUserService userService, 
+    public SimService(IOptions<SimConfig> config,
+      IGridService gridService,
+      IOrderService orderService,
+      ICargoTransporterService transporterService,
+      IUserService userService,
       ILoggerService loggerService,
       IHostApplicationLifetime applicationLifetime)
     {
@@ -40,14 +40,14 @@ namespace HahnCargoSim.Services
       this.orderService = orderService;
       this.transporterService = transporterService;
       this.userService = userService;
-      
+
       this.IsSimRunning = false;
       this.maxMoveOrderId = 0;
     }
 
     public void Start()
     {
-      if(IsSimRunning) return;
+      if (IsSimRunning) return;
 
       IsSimRunning = true;
 
@@ -66,15 +66,13 @@ namespace HahnCargoSim.Services
     {
       //Valid Check - Base Data
       var transporter = transporterService.Get(moveOrder.CargoTransporterId, moveOrder.Owner);
-
       var startNode = transporter?.Position;
       if (startNode == null) return false;
-
       var connectionId = gridService.ConnectionAvailable(startNode.Id, moveOrder.TargetNodeId);
       if (connectionId == -1) return false;
 
       var travelCost = gridService.GetConnectionCost((int)connectionId!);
-      if(userService.GetCoinAmount(moveOrder.Owner) - travelCost < 0) return false;
+      if (userService.GetCoinAmount(moveOrder.Owner) - travelCost < 0) return false;
 
 
       //Pay & Queue
@@ -119,14 +117,14 @@ namespace HahnCargoSim.Services
       foreach (var owner in userService.GetAllUserIds())
       {
         var ownedTransporterNotInTransit = transporterService.GetAll(owner).Where(t => !t.InTransit).ToList();
-        
+
         var acceptedOrders = orderService.GetForOwner(owner);
         foreach (var transporter in ownedTransporterNotInTransit)
         {
           if (transporter.Position == null) continue;
           var ordersStartingOnTransporterPosition =
             acceptedOrders.FindAll(order => order.OriginNode.Id == transporter.Position!.Id);
-          
+
           transporterService.LoadOrdersToCargoTransporter(transporter.Id, owner, ordersStartingOnTransporterPosition);
         }
       }
@@ -143,7 +141,7 @@ namespace HahnCargoSim.Services
           var percentageValue = 0.0;
           if (DateTime.UtcNow > finishedOrder.DeliveryDate)
           {
-            var overTimePercentage = 100 / (finishedOrder.ExpirationDate - finishedOrder.DeliveryDate).TotalSeconds * 
+            var overTimePercentage = 100 / (finishedOrder.ExpirationDate - finishedOrder.DeliveryDate).TotalSeconds *
                                      (DateTime.UtcNow - finishedOrder.DeliveryDate).TotalSeconds;
             percentageValue = orderValue / 100 * (100 - overTimePercentage);
             orderValue = (int)percentageValue;
@@ -157,7 +155,7 @@ namespace HahnCargoSim.Services
     }
 
     private void RemoveExpiredOrders()
-    { 
+    {
       orderService.RemoveExpiredAvailable();
 
       foreach (var owner in userService.GetAllUserIds())
